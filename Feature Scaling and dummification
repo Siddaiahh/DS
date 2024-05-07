@@ -1,0 +1,52 @@
+import pandas as pd
+
+
+
+data = pd.DataFrame({
+
+    'Age': [25, 30, 35, 40, 45],  
+
+    'Salary': [50000, 60000, 70000, 80000, 90000],  
+
+    'Department': ['HR', 'Tech', 'HR', 'Tech', 'Admin']  
+
+})
+
+print("Original Data:")
+
+print(data)
+
+
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+data['Age_std'] = scaler.fit_transform(data[['Age']])
+
+data['Salary_std'] = scaler.fit_transform(data[['Salary']])
+
+print("\nData after Standardization:")
+
+print(data[['Age', 'Age_std', 'Salary', 'Salary_std']])
+
+
+
+from sklearn.preprocessing import MinMaxScaler
+
+min_max_scaler = MinMaxScaler()
+
+data['Age_minmax'] = min_max_scaler.fit_transform(data[['Age']])
+
+data['Salary_minmax'] = min_max_scaler.fit_transform(data[['Salary']])
+
+print("\nData after Normalization:")
+
+print(data[['Age', 'Age_minmax', 'Salary', 'Salary_minmax']])
+
+data_with_dummies = pd.get_dummies(data, columns=['Department'])  
+
+print("\nData after Dummification:")
+
+print(data_with_dummies)
+
