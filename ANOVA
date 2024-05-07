@@ -1,0 +1,54 @@
+import numpy as np
+
+import scipy.stats as stats
+
+import statsmodels.api as sm
+
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+
+
+np.random.seed(42)
+
+group1 = np.random.normal(20, 3, 50)  
+
+group2 = np.random.normal(22, 3, 50)  
+
+group3 = np.random.normal(25, 3, 50)  
+
+
+
+f_value, p_value = stats.f_oneway(group1, group2, group3)
+
+print(f"ANOVA results: F={f_value}, p={p_value}")
+
+
+
+if p_value < 0.05:
+
+    print("Significant differences found, performing post-hoc testing...")
+
+    
+
+    data = np.concatenate([group1, group2, group3])
+
+    groups = ['Group1']*len(group1) + ['Group2']*len(group2) + ['Group3']*len(group3)
+
+    
+
+    tukey_results = pairwise_tukeyhsd(endog=data, groups=groups, alpha=0.05)
+
+    print(tukey_results)
+
+    tukey_results.plot_simultaneous()  
+
+    
+
+    import matplotlib.pyplot as plt
+
+    plt.show()
+
+else:
+
+    print("No significant differences found among groups.")
+
