@@ -1,0 +1,36 @@
+import pandas as pd
+
+Shivam = pd.read_csv("prac2.csv")
+
+print("Csv File")
+
+print(Shivam)
+
+Tayba = pd.read_json("prac.json")
+
+print("Json File")
+
+print(Tayba)
+
+Shivam.dropna(inplace=True)
+
+print("Csv file after handling missing value")
+
+print(Shivam)
+
+Tayba.dropna(inplace=True)
+
+print("JSON file after handling missing values ")
+
+print(Tayba)
+
+print("Filter which is equal to 85 ")
+
+print(Shivam["Score"] == 85)
+
+print("Sorting in ascending order")
+
+Sorted_value = Shivam.sort_values(by="Score", ascending=True)  
+
+print(Sorted_value)
+
