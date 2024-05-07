@@ -1,0 +1,90 @@
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.tree import DecisionTreeClassifier
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
+
+from sklearn import tree
+
+import matplotlib.pyplot as plt
+
+
+
+
+
+data = pd.read_csv('https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv')
+
+data['Age'] = data['Age'].fillna(data['Age'].mean())
+
+data['Embarked'] = data['Embarked'].fillna(data['Embarked'].mode()[0])
+
+features = data[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']]  
+
+features = pd.get_dummies(features)
+
+target = data['Survived']
+
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+
+X_train = scaler.fit_transform(X_train)
+
+X_test = scaler.transform(X_test)
+
+
+
+logreg = LogisticRegression()
+
+logreg.fit(X_train, y_train)
+
+
+
+
+
+y_pred_lr = logreg.predict(X_test)
+
+
+
+print("Logistic Regression Accuracy:", accuracy_score(y_test, y_pred_lr))
+
+print("Precision:", precision_score(y_test, y_pred_lr))
+
+print("Recall:", recall_score(y_test, y_pred_lr))
+
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred_lr))
+
+
+
+dtree = DecisionTreeClassifier(random_state=42)
+
+dtree.fit(X_train, y_train)
+
+
+
+y_pred_dt = dtree.predict(X_test)
+
+
+
+print("Decision Tree Accuracy:", accuracy_score(y_test, y_pred_dt))
+
+print("Precision:", precision_score(y_test, y_pred_dt))
+
+print("Recall:", recall_score(y_test, y_pred_dt))
+
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred_dt))
+
+
+
+plt.figure(figsize=(20,10))
+
+tree.plot_tree(dtree, filled=True, feature_names=features.columns, class_names=['Died', 'Survived'], fontsize=10)
+
+plt.show()
+
