@@ -1,4 +1,4 @@
-#import all the libraries
+# Import necessary libraries
 
 import pandas as pd
 
@@ -8,24 +8,55 @@ from sklearn.cluster import KMeans
 
 import matplotlib.pyplot as plt
 
-data = pd.read_csv("wholesale.csv")
 
-categorical_feature = ['Channel','Region']
-continuous_feature = ['Fresh','Milk','Grocery','Frozen','Detergents_Paper','Delicassen']
+
+data = {
+
+    'Channel': [2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2],
+
+    'Region': [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+
+    'Fresh': [12669, 7057, 6353, 13265, 22615, 9413, 12126, 7579, 5963, 6006, 3366, 13146, 31714, 21217, 24653, 10253, 1020, 5876, 18601, 7780],
+
+    'Milk': [9656, 9810, 8808, 1196, 5410, 8259, 3199, 4956, 3648, 11093, 5403, 1124, 12319, 6208, 9465, 1114, 29627, 23527, 6327, 2495],
+
+    'Grocery': [7561, 9568, 7684, 4221, 7198, 5126, 6975, 9426, 6192, 18881, 12974, 4523, 11757, 14982, 12091, 3821, 8814, 13227, 12121, 946],
+
+    'Frozen': [214, 1762, 2405, 6404, 3915, 666, 480, 1669, 425, 1159, 108, 264, 287, 1338, 6404, 315, 8, 230, 1152, 297],
+
+    'Detergents_Paper': [2674, 3293, 3516, 507, 1777, 1795, 3140, 3321, 1716, 7425, 5977, 108, 441, 6747, 256, 1716, 1712, 4362, 3143, 242],
+
+    'Delicassen': [1338, 1776, 7844, 1788, 5185, 1451, 545, 2566, 750, 2098, 1276, 231, 1333, 11093, 14941, 750, 3, 774, 699, 196]
+
+}
+
+
+
+data = pd.DataFrame(data)
+
+data.dropna(inplace=True)
+
+categorical_feature = ['Channel', 'Region']
+
+continuous_feature = ['Fresh', 'Milk', 'Grocery', 'Frozen', 'Detergents_Paper', 'Delicassen']
+
+
 
 for col in categorical_feature:
 
- dummies = pd.get_dummies(data[col], prefix=col)
+    dummies = pd.get_dummies(data[col], prefix=col) 
 
- data = pd.concat([data, dummies], axis=1)
+    data = pd.concat([data, dummies], axis=1)
 
- data.drop(col, axis=1, inplace=True)
+    data.drop(col, axis=1, inplace=True)
+
+
 
 mms = MinMaxScaler()
 
 data_transformed = mms.fit_transform(data)
 
-# Adjusting the range of K based on the number of samples in the dataset
+
 
 K = range(1, min(15, len(data) + 1))
 
@@ -33,11 +64,15 @@ Sum_of_squared_distances = []
 
 for k in K:
 
- km = KMeans(n_clusters=k)
+    km = KMeans(n_clusters=k, n_init=10)  
 
- km = km.fit(data_transformed)
+    km = km.fit(data_transformed)
 
- Sum_of_squared_distances.append(km.inertia_)
+    Sum_of_squared_distances.append(km.inertia_)
+
+
+
+
 
 plt.plot(K, Sum_of_squared_distances, 'bx-')
 
@@ -48,3 +83,4 @@ plt.ylabel('Sum_of_squared_distances')
 plt.title('Elbow Method for Optimal k')
 
 plt.show()
+
