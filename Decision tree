@@ -1,0 +1,11 @@
+print(head(readingSkills))
+
+
+input.data<-readingSkills[c(1:105),]
+png(file="decision_tree.png")
+output.tree<-ctree(nativeSpeaker-age+Shoesize+score,data=input.data)
+plot(output.tree)
+dev.off()
+
+
+plot(output.tree)
